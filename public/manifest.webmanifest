@@ -1,0 +1,30 @@
+{
+  "name": "PD Audiobooks — Public Domain Audiobooks",
+  "short_name": "PD Audiobooks",
+  "description": "Discover and listen to thousands of free public domain audiobooks from LibriVox.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#12100d",
+  "theme_color": "#c87533",
+  "orientation": "any",
+  "categories": ["books", "education", "entertainment"],
+  "icons": [
+    {
+      "src": "icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icons/icon-512-maskable.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

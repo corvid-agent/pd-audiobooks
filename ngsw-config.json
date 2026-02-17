@@ -1,0 +1,61 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/favicon.ico",
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/icons/*"
+        ]
+      }
+    },
+    {
+      "name": "fonts",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "urls": [
+          "https://fonts.googleapis.com/**",
+          "https://fonts.gstatic.com/**"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "librivox-api",
+      "urls": ["https://librivox.org/api/**"],
+      "cacheConfig": {
+        "maxSize": 200,
+        "maxAge": "1d",
+        "strategy": "freshness",
+        "timeout": "5s"
+      }
+    },
+    {
+      "name": "cover-images",
+      "urls": ["https://archive.org/download/**", "https://covers.openlibrary.org/**"],
+      "cacheConfig": {
+        "maxSize": 500,
+        "maxAge": "30d",
+        "strategy": "performance"
+      }
+    }
+  ]
+}
