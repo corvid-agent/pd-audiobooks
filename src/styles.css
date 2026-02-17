@@ -106,7 +106,7 @@
   --progress-fill: #a0601e;
 }
 
-[data-theme='light'] body::after { display: none; }
+[data-theme='light'] body::before { display: none; }
 [data-theme='light'] ::-webkit-scrollbar-track { background: var(--bg-deep); }
 [data-theme='light'] ::-webkit-scrollbar-thumb { background: #ccc; }
 [data-theme='light'] ::-webkit-scrollbar-thumb:hover { background: #aaa; }
@@ -174,7 +174,7 @@
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
-.reduced-motion body::after { display: none !important; }
+.reduced-motion body::before { display: none !important; }
 .reduced-motion ::view-transition-old(root),
 .reduced-motion ::view-transition-new(root) { animation: none !important; }
 
@@ -196,15 +196,13 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
-html, body {
+body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   background-color: var(--bg-deep);
   color: var(--text-primary);
   font-family: var(--font-body);
@@ -223,8 +221,8 @@ html, body {
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
-/* Paper texture overlay */
-body::after {
+/* Paper texture overlay — applied to bg only, no z-index blocking */
+body::before {
   content: '';
   position: fixed;
   inset: 0;
@@ -232,7 +230,7 @@ body::after {
   opacity: 0.02;
   background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="256" height="256" filter="url(%23n)" opacity="0.4"/%3E%3C/svg%3E');
   background-size: 256px 256px;
-  z-index: 9999;
+  z-index: -1;
 }
 
 /* View Transitions */
@@ -253,7 +251,7 @@ body::after {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  body::after { display: none; }
+  body::before { display: none; }
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
 }
@@ -486,7 +484,7 @@ img {
     --text-tertiary: #888;
     --accent-primary: #7a4e00;
   }
-  body::after { display: none !important; }
+  body::before { display: none !important; }
   .header, .skip-link, app-footer, app-toast-container,
   app-player-bar, app-bottom-nav,
   .btn-primary, .btn-secondary, .btn-ghost {
