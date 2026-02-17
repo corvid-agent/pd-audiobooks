@@ -55,6 +55,8 @@ jobs:
         run: cp dist/pd-audiobooks/browser/index.html dist/pd-audiobooks/browser/404.html
 
       - uses: actions/configure-pages@v4
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
