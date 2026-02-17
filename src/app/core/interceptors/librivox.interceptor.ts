@@ -1,13 +1,16 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
+const CORS_PROXY = 'https://corsproxy.io/?url=';
+
 export const librivoxInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.url.includes('librivox.org/api')) {
     const url = new URL(req.url);
     if (!url.searchParams.has('format')) {
       url.searchParams.set('format', 'json');
     }
+    const proxiedUrl = `${CORS_PROXY}${encodeURIComponent(url.toString())}`;
     const cloned = req.clone({
-      url: url.toString(),
+      url: proxiedUrl,
       setHeaders: {
         Accept: 'application/json',
       },

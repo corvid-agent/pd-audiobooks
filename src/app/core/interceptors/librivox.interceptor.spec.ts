@@ -23,16 +23,24 @@ describe('librivoxInterceptor', () => {
     httpMock.verify();
   });
 
+  it('should proxy LibriVox API requests through corsproxy.io', () => {
+    http.get('https://librivox.org/api/feed/audiobooks').subscribe();
+    const req = httpMock.expectOne((r) => r.url.includes('corsproxy.io'));
+    expect(req.request.url).toContain('corsproxy.io');
+    expect(req.request.url).toContain(encodeURIComponent('librivox.org'));
+    req.flush({});
+  });
+
   it('should append format=json to LibriVox API requests', () => {
     http.get('https://librivox.org/api/feed/audiobooks').subscribe();
-    const req = httpMock.expectOne((r) => r.url.includes('librivox.org'));
-    expect(req.request.url).toContain('format=json');
+    const req = httpMock.expectOne((r) => r.url.includes('corsproxy.io'));
+    expect(req.request.url).toContain(encodeURIComponent('format=json'));
     req.flush({});
   });
 
   it('should set Accept header to application/json', () => {
     http.get('https://librivox.org/api/feed/audiobooks').subscribe();
-    const req = httpMock.expectOne((r) => r.url.includes('librivox.org'));
+    const req = httpMock.expectOne((r) => r.url.includes('corsproxy.io'));
     expect(req.request.headers.get('Accept')).toBe('application/json');
     req.flush({});
   });
@@ -47,9 +55,9 @@ describe('librivoxInterceptor', () => {
 
   it('should not override existing format param', () => {
     http.get('https://librivox.org/api/feed/audiobooks?format=xml').subscribe();
-    const req = httpMock.expectOne((r) => r.url.includes('librivox.org'));
-    expect(req.request.url).toContain('format=xml');
-    expect(req.request.url).not.toContain('format=json');
+    const req = httpMock.expectOne((r) => r.url.includes('corsproxy.io'));
+    expect(req.request.url).toContain(encodeURIComponent('format=xml'));
+    expect(req.request.url).not.toContain(encodeURIComponent('format=json'));
     req.flush({});
   });
 });
