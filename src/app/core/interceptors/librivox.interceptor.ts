@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
-const CORS_PROXY = 'https://corsproxy.io/?url=';
+const CORS_PROXY = 'https://api.codetabs.com/v1/proxy/?quest=';
 
 export const librivoxInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.url.includes('librivox.org/api')) {

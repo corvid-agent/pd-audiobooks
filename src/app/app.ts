@@ -111,6 +111,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
   styles: [`
     main {
       min-height: calc(100vh - 60px - 100px);
+      padding-bottom: var(--space-lg);
     }
     .offline-banner {
       background: var(--color-info);
@@ -122,7 +123,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
     }
     @media (max-width: 768px) {
       main {
-        padding-bottom: 128px;
+        padding-bottom: 80px;
       }
     }
     .shortcuts-overlay {

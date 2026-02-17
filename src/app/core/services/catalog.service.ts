@@ -98,22 +98,28 @@ export class CatalogService {
   }
 
   loadFeatured(): void {
+    this.loading.set(true);
+    this.error.set(null);
     const url = `${API_BASE}/audiobooks?format=json&extended=1&coverart=1&limit=12&offset=0`;
     this.http.get<{ books: LibrivoxBookRaw[] }>(url).subscribe({
       next: (res) => {
         this.featured.set((res.books ?? []).map((b) => this.mapSummary(b)));
+        this.loading.set(false);
       },
-      error: (err) => console.error('loadFeatured error:', err),
+      error: () => {
+        this.error.set('Failed to load audiobooks. Please try again.');
+        this.loading.set(false);
+      },
     });
   }
 
   loadRecentlyAdded(): void {
-    const url = `${API_BASE}/audiobooks?format=json&extended=1&coverart=1&limit=12&since=2024-01-01`;
+    const url = `${API_BASE}/audiobooks?format=json&extended=1&coverart=1&limit=12&offset=12`;
     this.http.get<{ books: LibrivoxBookRaw[] }>(url).subscribe({
       next: (res) => {
         this.recentlyAdded.set((res.books ?? []).map((b) => this.mapSummary(b)));
       },
-      error: (err) => console.error('loadRecentlyAdded error:', err),
+      error: () => { /* non-critical, silently fail */ },
     });
   }
 
@@ -198,8 +204,15 @@ export class CatalogService {
   }
 
   private mapChapter(raw: LibrivoxSectionRaw): Chapter {
-    const parts = (raw.playtime ?? '00:00:00').split(':').map(Number);
-    const secs = (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+    // playtime can be plain seconds ("1179") or "HH:MM:SS" format
+    const pt = raw.playtime ?? '0';
+    let secs: number;
+    if (pt.includes(':')) {
+      const parts = pt.split(':').map(Number);
+      secs = (parts[0] || 0) * 3600 + (parts[1] || 0) * 60 + (parts[2] || 0);
+    } else {
+      secs = parseInt(pt, 10) || 0;
+    }
     return {
       id: raw.id,
       sectionNumber: parseInt(raw.section_number, 10) || 0,
@@ -223,14 +236,8 @@ export class CatalogService {
   }
 
   private buildCoverUrl(raw: LibrivoxBookRaw): string | null {
-    if (raw.url_zip_file) {
-      try {
-        const match = raw.url_zip_file.match(/\/([^/]+)_\d+_librivox/);
-        if (match) {
-          return `https://archive.org/download/${match[1]}/${match[1]}_1404.jpg`;
-        }
-      } catch { /* fallback */ }
-    }
+    if (raw.coverart_jpg) return raw.coverart_jpg;
+    if (raw.coverart_thumbnail) return raw.coverart_thumbnail;
     return null;
   }
 

@@ -64,7 +64,8 @@ import { LibraryService } from '../../core/services/library.service';
   styles: [`
     :host {
       display: block;
-      width: 180px;
+      width: 100%;
+      min-width: 0;
       flex-shrink: 0;
     }
     .card {

@@ -33,7 +33,7 @@ export const cacheInterceptor: HttpInterceptorFn = (req, next) => {
   const isExternal =
     req.url.includes('librivox.org') ||
     req.url.includes('archive.org') ||
-    req.url.includes('corsproxy.io');
+    req.url.includes('codetabs.com');
 
   if (!isExternal) return next(req);
 

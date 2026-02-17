@@ -68,6 +68,8 @@ export interface LibrivoxBookRaw {
   totaltimesecs: number;
   authors: LibrivoxAuthorRaw[];
   genres: { id: string; name: string }[] | string;
+  coverart_jpg?: string;
+  coverart_thumbnail?: string;
   url_rss: string;
   url_zip_file: string;
   url_librivox: string;

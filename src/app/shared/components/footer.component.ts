@@ -195,12 +195,14 @@ import { RouterLink } from '@angular/router';
         gap: var(--space-sm);
       }
     }
+    @media (max-width: 768px) {
+      .footer { padding-bottom: 100px; }
+    }
     @media (max-width: 480px) {
       .footer-columns {
         flex-direction: column;
         gap: var(--space-lg);
       }
-      .footer { padding-bottom: 100px; }
     }
   `],
 })
