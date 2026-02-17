@@ -51,6 +51,7 @@ import { RouterLink } from '@angular/router';
                 <a href="https://corvid-agent.github.io/pd-gallery/" target="_blank" rel="noopener noreferrer">Art Gallery</a>
                 <a href="https://corvid-agent.github.io/weather-dashboard/" target="_blank" rel="noopener noreferrer">Weather</a>
                 <a href="https://corvid-agent.github.io/space-dashboard/" target="_blank" rel="noopener noreferrer">Space</a>
+                <a href="https://corvid-agent.github.io/retro-arcade/" target="_blank" rel="noopener noreferrer">Retro Arcade</a>
               </nav>
             </div>
           </div>
