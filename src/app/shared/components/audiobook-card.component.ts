@@ -13,7 +13,7 @@ import { LibraryService } from '../../core/services/library.service';
       <article class="card" role="listitem">
         <a class="card-link" [routerLink]="['/audiobook', audiobook.id]" [attr.aria-label]="audiobook.title + ' by ' + authorDisplay">
           <div class="card-cover">
-            @if (audiobook.coverArtUrl) {
+            @if (audiobook.coverArtUrl && !imgError) {
               <img
                 [src]="audiobook.coverArtUrl"
                 [alt]="audiobook.title + ' cover art'"
@@ -21,6 +21,7 @@ import { LibraryService } from '../../core/services/library.service';
                 loading="lazy"
                 width="180"
                 height="180"
+                (error)="imgError = true"
               />
             } @else {
               <div class="card-img-placeholder" aria-hidden="true">
@@ -200,6 +201,7 @@ import { LibraryService } from '../../core/services/library.service';
 export class AudiobookCardComponent {
   @Input() audiobook!: AudiobookSummary;
   protected readonly library = inject(LibraryService);
+  imgError = false;
 
   get authorDisplay(): string {
     if (!this.audiobook?.authors?.length) return 'Unknown Author';

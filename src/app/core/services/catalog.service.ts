@@ -236,8 +236,8 @@ export class CatalogService {
   }
 
   private buildCoverUrl(raw: LibrivoxBookRaw): string | null {
-    if (raw.coverart_jpg) return raw.coverart_jpg;
-    if (raw.coverart_thumbnail) return raw.coverart_thumbnail;
+    const url = raw.coverart_jpg || raw.coverart_thumbnail || null;
+    if (url) return url.replace('https://www.archive.org/', 'https://archive.org/');
     return null;
   }
 
