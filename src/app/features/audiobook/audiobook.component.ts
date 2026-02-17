@@ -20,8 +20,8 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
       <div class="detail container">
         <div class="detail__hero">
           <div class="detail__cover">
-            @if (b.coverArtUrl) {
-              <img [src]="b.coverArtUrl" [alt]="b.title + ' cover'" />
+            @if (b.coverArtUrl && !coverFailed()) {
+              <img [src]="b.coverArtUrl" [alt]="b.title + ' cover'" (error)="coverFailed.set(true)" />
             } @else {
               <div class="detail__cover-placeholder">
                 <span>{{ b.title }}</span>
@@ -140,6 +140,10 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
       display: flex;
       gap: var(--space-xl);
       margin-bottom: var(--space-2xl);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
     }
     .detail__cover {
       flex-shrink: 0;
@@ -335,6 +339,7 @@ export class AudiobookComponent implements OnInit {
 
   readonly book = signal<AudiobookDetail | null>(null);
   readonly loading = signal(true);
+  readonly coverFailed = signal(false);
 
   readonly hasProgress = signal(false);
 
@@ -349,6 +354,7 @@ export class AudiobookComponent implements OnInit {
 
   private async loadBook(id: string): Promise<void> {
     this.loading.set(true);
+    this.coverFailed.set(false);
     const detail = await this.catalog.getDetailAsync(id);
     this.book.set(detail);
     this.loading.set(false);
