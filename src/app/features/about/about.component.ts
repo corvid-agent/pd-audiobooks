@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router';
     <div class="about container">
       <h1>About PD Audiobooks</h1>
 
-      <section class="about__section">
+      <section class="about__section" aria-label="What is PD Audiobooks">
         <h2>What is PD Audiobooks?</h2>
         <p>
           PD Audiobooks is a free, open-source progressive web app for discovering and listening to
@@ -19,7 +19,7 @@ import { RouterLink } from '@angular/router';
         </p>
       </section>
 
-      <section class="about__section">
+      <section class="about__section" aria-label="Features">
         <h2>Features</h2>
         <ul class="about__features">
           <li>Browse thousands of free audiobooks by title, author, or genre</li>
@@ -34,7 +34,7 @@ import { RouterLink } from '@angular/router';
         </ul>
       </section>
 
-      <section class="about__section">
+      <section class="about__section" aria-label="Credits">
         <h2>Credits</h2>
         <p>
           Audiobook recordings from <a href="https://librivox.org" target="_blank" rel="noopener">LibriVox</a>,
@@ -43,7 +43,7 @@ import { RouterLink } from '@angular/router';
         </p>
       </section>
 
-      <section class="about__section">
+      <section class="about__section" aria-label="Open source">
         <h2>Open Source</h2>
         <p>
           PD Audiobooks is open source. View the code on

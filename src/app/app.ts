@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, OnDestroy, signal, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/components/header.component';
 import { FooterComponent } from './shared/components/footer.component';
@@ -23,7 +23,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
       <div class="offline-banner" role="status">Offline — some features may be unavailable</div>
     }
     <app-header />
-    <main id="main-content">
+    <main id="main-content" aria-label="Main content">
       <router-outlet />
     </main>
     <app-footer />
@@ -118,7 +118,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
       color: #fff;
       text-align: center;
       padding: 6px var(--space-md);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       font-weight: 600;
     }
     @media (max-width: 768px) {
@@ -167,10 +167,13 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
       color: var(--text-tertiary);
       font-size: 1.5rem;
       cursor: pointer;
-      min-height: auto;
-      min-width: auto;
+      min-height: 44px;
+      min-width: 44px;
       padding: 4px 8px;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .shortcuts-close:hover { color: var(--text-primary); }
     .shortcuts-list {
@@ -192,7 +195,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
       border-radius: var(--radius-sm);
       padding: 2px 8px;
       font-family: var(--font-body);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--accent-primary);
       min-width: 28px;
       text-align: center;
@@ -247,7 +250,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
     .onboarding-list li:last-child { border-bottom: none; }
     .onboarding-list strong { color: var(--accent-primary); }
     .onboarding-tip {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       margin: 0 0 var(--space-xl);
     }
@@ -256,7 +259,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
       border: 1px solid var(--border-bright);
       border-radius: var(--radius-sm);
       padding: 1px 6px;
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--accent-primary);
     }
     .onboarding-btn {
@@ -312,7 +315,7 @@ const ONBOARDING_KEY = 'pd-audiobooks-onboarded';
     }
     .a11y-section:last-of-type { border-bottom: none; }
     .a11y-label {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -444,6 +447,17 @@ export class App implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     window.removeEventListener('online', this.onlineHandler);
     window.removeEventListener('offline', this.offlineHandler);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    if (this.showOnboarding) {
+      this.dismissOnboarding();
+    } else if (this.shortcuts.helpOpen()) {
+      this.shortcuts.helpOpen.set(false);
+    } else if (this.a11y.panelOpen()) {
+      this.a11y.panelOpen.set(false);
+    }
   }
 
   dismissOnboarding(): void {

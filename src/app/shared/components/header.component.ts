@@ -183,10 +183,10 @@ import { AccessibilityService } from '../../core/services/accessibility.service'
     }
     .search-input {
       width: 200px;
-      height: 36px;
-      min-height: 36px;
-      padding: 0 36px 0 var(--space-sm);
-      font-size: 0.85rem;
+      height: 44px;
+      min-height: 44px;
+      padding: 0 44px 0 var(--space-sm);
+      font-size: 0.875rem;
       background-color: var(--bg-input);
       border: 1px solid var(--border);
       border-radius: var(--radius);
@@ -208,8 +208,8 @@ import { AccessibilityService } from '../../core/services/accessibility.service'
       border: none;
       color: var(--text-tertiary);
       padding: 4px;
-      min-height: 32px;
-      min-width: 32px;
+      min-height: 44px;
+      min-width: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -221,8 +221,8 @@ import { AccessibilityService } from '../../core/services/accessibility.service'
       border: none;
       color: var(--text-secondary);
       padding: 0;
-      min-height: 40px;
-      min-width: 40px;
+      min-height: 44px;
+      min-width: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -242,8 +242,8 @@ import { AccessibilityService } from '../../core/services/accessibility.service'
       background: none;
       border: none;
       padding: 0;
-      min-height: 40px;
-      min-width: 40px;
+      min-height: 44px;
+      min-width: 44px;
       align-items: center;
       cursor: pointer;
     }

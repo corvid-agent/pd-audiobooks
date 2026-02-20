@@ -120,7 +120,7 @@ import { RouterLink } from '@angular/router';
     }
     .footer-tagline {
       color: var(--text-tertiary);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       margin: 0;
       line-height: 1.5;
     }
@@ -135,7 +135,7 @@ import { RouterLink } from '@angular/router';
     }
     .footer-col-title {
       font-family: var(--font-body);
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -161,7 +161,7 @@ import { RouterLink } from '@angular/router';
     }
     .footer-credits {
       color: var(--text-tertiary);
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       margin: 0;
       line-height: 1.5;
     }
@@ -182,13 +182,13 @@ import { RouterLink } from '@angular/router';
     .footer-links a {
       color: var(--text-tertiary);
       text-decoration: none;
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       transition: color 0.2s;
     }
     .footer-links a:hover { color: var(--accent-primary); }
     .footer-sep {
       color: var(--text-tertiary);
-      font-size: 0.8rem;
+      font-size: 0.875rem;
     }
     @media (max-width: 768px) {
       .footer { padding: var(--space-xl) 0 var(--space-lg); }

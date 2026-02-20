@@ -55,30 +55,30 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
             }
             <div class="detail__actions">
               @if (hasProgress()) {
-                <button class="btn-primary" (click)="resumeBook()">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                <button class="btn-primary" (click)="resumeBook()" aria-label="Resume playing {{ b.title }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
                   Resume
                 </button>
               } @else {
-                <button class="btn-primary" (click)="playBook()">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                <button class="btn-primary" (click)="playBook()" aria-label="Play {{ b.title }}">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
                   Play
                 </button>
               }
-              <button class="btn-secondary" (click)="toggleBookmark()">
+              <button class="btn-secondary" (click)="toggleBookmark()" [attr.aria-label]="library.isBookmarked(b.id) ? 'Remove bookmark for ' + b.title : 'Bookmark ' + b.title">
                 @if (library.isBookmarked(b.id)) {
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   Bookmarked
                 } @else {
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                   Bookmark
                 }
               </button>
-              <button class="btn-secondary" (click)="toggleFavorite()">
+              <button class="btn-secondary" (click)="toggleFavorite()" [attr.aria-label]="library.isFavorite(b.id) ? 'Remove ' + b.title + ' from favorites' : 'Add ' + b.title + ' to favorites'">
                 @if (library.isFavorite(b.id)) {
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#e53e3e" stroke="#e53e3e" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#e53e3e" stroke="#e53e3e" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 } @else {
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 }
               </button>
               @if (b.urlZipFile) {
@@ -87,12 +87,12 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
                 </a>
               }
               @if (allChaptersDownloaded()) {
-                <button class="btn-secondary btn-offline btn-offline--done" (click)="removeAllOffline()">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <button class="btn-secondary btn-offline btn-offline--done" (click)="removeAllOffline()" aria-label="Remove all offline copies">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                   Offline Ready
                 </button>
               } @else {
-                <button class="btn-secondary btn-offline" (click)="downloadAllOffline()" [disabled]="offlineService.activeDownload() !== null">
+                <button class="btn-secondary btn-offline" (click)="downloadAllOffline()" [disabled]="offlineService.activeDownload() !== null" aria-label="Download all chapters for offline listening">
                   @if (offlineService.activeDownload(); as dl) {
                     <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
                     {{ dl.percent }}%
@@ -107,19 +107,19 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
         </div>
 
         @if (b.description) {
-          <section class="detail__description">
+          <section class="detail__description" aria-label="About this audiobook">
             <h2>About This Audiobook</h2>
             <p>{{ b.description }}</p>
           </section>
         }
 
         @if (b.sections.length > 0) {
-          <section class="detail__chapters">
+          <section class="detail__chapters" aria-label="Chapter list">
             <h2>Chapters ({{ b.sections.length }})</h2>
             <div class="chapter-list" role="list">
               @for (chapter of b.sections; track chapter.id; let i = $index) {
                 <div class="chapter-row" role="listitem">
-                  <button class="chapter-item" (click)="playChapter(i)" [class.chapter-item--playing]="isChapterPlaying(chapter.id)">
+                  <button class="chapter-item" (click)="playChapter(i)" [class.chapter-item--playing]="isChapterPlaying(chapter.id)" [attr.aria-label]="'Play chapter ' + chapter.sectionNumber + ': ' + chapter.title">
                     <span class="chapter-item__number">{{ chapter.sectionNumber }}</span>
                     <div class="chapter-item__info">
                       <span class="chapter-item__title">{{ chapter.title }}</span>
@@ -231,7 +231,7 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
       margin-bottom: var(--space-md);
     }
     .detail__meta-item {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--text-secondary);
       padding: 2px 10px;
       border: 1px solid var(--border);
@@ -244,7 +244,7 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
       margin-bottom: var(--space-lg);
     }
     .detail__genre {
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       padding: 3px 12px;
       border: 1px solid var(--border-bright);
       border-radius: 12px;
@@ -306,7 +306,7 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
     }
     .chapter-item__number {
       font-family: var(--font-heading);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       font-weight: 700;
       color: var(--text-tertiary);
       min-width: 28px;
@@ -326,11 +326,11 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
     }
     .chapter-item__reader {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
     }
     .chapter-item__duration {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       flex-shrink: 0;
     }
@@ -375,7 +375,7 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
     }
     .chapter-dl-btn:disabled { opacity: 0.6; cursor: not-allowed; }
     .chapter-dl-pct {
-      font-size: 0.6rem;
+      font-size: 0.75rem;
       font-weight: 700;
     }
     .btn-offline {

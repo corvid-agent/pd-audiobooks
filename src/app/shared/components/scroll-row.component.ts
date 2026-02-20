@@ -65,10 +65,10 @@ import { Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, signa
       background-color: var(--bg-surface);
       border: 1px solid var(--border-bright);
       color: var(--text-secondary);
-      width: 40px;
-      height: 40px;
-      min-height: 40px;
-      min-width: 40px;
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      min-width: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;

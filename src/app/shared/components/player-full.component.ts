@@ -134,7 +134,7 @@ import { DurationPipe } from '../pipes/duration.pipe';
     }
     .pf__collapse:hover, .pf__action:hover { color: var(--text-primary); }
     .pf__chapter-label {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.06em;
@@ -183,7 +183,7 @@ import { DurationPipe } from '../pipes/duration.pipe';
       margin: 0 0 4px;
     }
     .pf__chapter-title {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       margin: 0;
     }
@@ -196,7 +196,7 @@ import { DurationPipe } from '../pipes/duration.pipe';
       margin-bottom: var(--space-lg);
     }
     .pf__time {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       min-width: 42px;
       text-align: center;
@@ -211,6 +211,11 @@ import { DurationPipe } from '../pipes/duration.pipe';
       border-radius: 2px;
       outline: none;
       cursor: pointer;
+    }
+    .pf__slider:focus-visible {
+      outline: 3px solid var(--accent-primary);
+      outline-offset: 4px;
+      border-radius: 2px;
     }
     .pf__slider::-webkit-slider-thumb {
       -webkit-appearance: none;
@@ -245,7 +250,7 @@ import { DurationPipe } from '../pipes/duration.pipe';
     .pf__ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     .pf__skip-label {
       position: absolute;
-      font-size: 0.55rem;
+      font-size: 0.625rem;
       font-weight: 700;
       color: inherit;
       top: 50%;
@@ -277,15 +282,15 @@ import { DurationPipe } from '../pipes/duration.pipe';
       background: none;
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      min-height: 40px;
-      min-width: 40px;
+      min-height: 44px;
+      min-width: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
+      border-radius: 22px;
+      font-size: 0.875rem;
       font-weight: 600;
     }
     .pf__sec-btn:hover {

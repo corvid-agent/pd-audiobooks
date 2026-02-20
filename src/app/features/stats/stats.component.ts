@@ -38,7 +38,7 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
       </div>
 
       @if (library.history().length > 0) {
-        <section class="stats__section">
+        <section class="stats__section" aria-label="Listening activity">
           <h2>Listening Activity</h2>
           <div class="stats__chart">
             @for (item of topListened(); track item.bookId) {
@@ -86,7 +86,7 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
       color: var(--accent-primary);
     }
     .stats__label {
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.08em;
@@ -106,7 +106,7 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
       gap: var(--space-md);
     }
     .stats__bar-label {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       width: 100px;
       flex-shrink: 0;
       white-space: nowrap;
@@ -128,7 +128,7 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
       min-width: 4px;
     }
     .stats__bar-value {
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       width: 60px;
       flex-shrink: 0;
@@ -142,7 +142,7 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
     @media (max-width: 480px) {
       .stats__cards { grid-template-columns: repeat(2, 1fr); }
       .stats__value { font-size: 1.5rem; }
-      .stats__bar-label { width: 70px; font-size: 0.75rem; }
+      .stats__bar-label { width: 70px; font-size: 0.875rem; }
     }
   `],
 })

@@ -118,7 +118,7 @@ import { LibraryService } from '../../core/services/library.service';
       left: var(--space-xs);
       background-color: rgba(0, 0, 0, 0.7);
       color: var(--accent-primary);
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -133,7 +133,7 @@ import { LibraryService } from '../../core/services/library.service';
     }
     .card-title {
       font-family: var(--font-heading);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       font-weight: 600;
       line-height: 1.3;
       margin: 0;
@@ -145,7 +145,7 @@ import { LibraryService } from '../../core/services/library.service';
       transition: color 0.2s;
     }
     .card-author {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       margin: 2px 0 0;
       white-space: nowrap;
@@ -153,7 +153,7 @@ import { LibraryService } from '../../core/services/library.service';
       text-overflow: ellipsis;
     }
     .card-duration {
-      font-size: 0.7rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       margin: 2px 0 0;
     }
@@ -165,10 +165,10 @@ import { LibraryService } from '../../core/services/library.service';
       background-color: rgba(0, 0, 0, 0.6);
       border: none;
       color: var(--text-secondary);
-      width: 32px;
-      height: 32px;
-      min-height: 32px;
-      min-width: 32px;
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      min-width: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;

@@ -75,7 +75,7 @@ import { NotificationService, Toast } from '../../core/services/notification.ser
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       border-radius: 50%;
     }
     .toast-success .toast-icon {
@@ -101,8 +101,8 @@ import { NotificationService, Toast } from '../../core/services/notification.ser
       font-size: 1.2rem;
       cursor: pointer;
       padding: 0;
-      min-height: 28px;
-      min-width: 28px;
+      min-height: 44px;
+      min-width: 44px;
       display: flex;
       align-items: center;
       justify-content: center;

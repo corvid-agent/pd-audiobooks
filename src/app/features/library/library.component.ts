@@ -11,14 +11,14 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
     <div class="library container">
       <h1>My Library</h1>
 
-      <div class="library__tabs" role="tablist">
-        <button class="library__tab" [class.active]="activeTab() === 'bookmarks'" (click)="activeTab.set('bookmarks')" role="tab">
+      <div class="library__tabs" role="tablist" aria-label="Library sections" (keydown)="onTabKeydown($event)">
+        <button class="library__tab" [class.active]="activeTab() === 'bookmarks'" (click)="activeTab.set('bookmarks')" role="tab" [attr.aria-selected]="activeTab() === 'bookmarks'" [attr.tabindex]="activeTab() === 'bookmarks' ? 0 : -1" id="tab-bookmarks" aria-controls="panel-bookmarks">
           Bookmarks ({{ library.bookmarks().length }})
         </button>
-        <button class="library__tab" [class.active]="activeTab() === 'history'" (click)="activeTab.set('history')" role="tab">
+        <button class="library__tab" [class.active]="activeTab() === 'history'" (click)="activeTab.set('history')" role="tab" [attr.aria-selected]="activeTab() === 'history'" [attr.tabindex]="activeTab() === 'history' ? 0 : -1" id="tab-history" aria-controls="panel-history">
           History ({{ library.history().length }})
         </button>
-        <button class="library__tab" [class.active]="activeTab() === 'favorites'" (click)="activeTab.set('favorites')" role="tab">
+        <button class="library__tab" [class.active]="activeTab() === 'favorites'" (click)="activeTab.set('favorites')" role="tab" [attr.aria-selected]="activeTab() === 'favorites'" [attr.tabindex]="activeTab() === 'favorites' ? 0 : -1" id="tab-favorites" aria-controls="panel-favorites">
           Favorites ({{ library.favorites().length }})
         </button>
       </div>
@@ -119,7 +119,7 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
       border-bottom: 2px solid transparent;
       margin-bottom: -2px;
       transition: color 0.2s, border-color 0.2s;
-      min-height: auto;
+      min-height: 44px;
     }
     .library__tab:hover { color: var(--text-primary); }
     .library__tab.active {
@@ -179,7 +179,7 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
       overflow: hidden;
     }
     .library__card-meta {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
     }
     .library__list {
@@ -215,17 +215,17 @@ import { DurationPipe } from '../../shared/pipes/duration.pipe';
     }
     .library__history-meta {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
     }
     .library__history-date {
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       flex-shrink: 0;
     }
     @media (max-width: 480px) {
       .library__tabs { overflow-x: auto; }
-      .library__tab { white-space: nowrap; padding: var(--space-sm) var(--space-md); font-size: 0.85rem; }
+      .library__tab { white-space: nowrap; padding: var(--space-sm) var(--space-md); font-size: 0.875rem; }
       .library__grid { grid-template-columns: repeat(2, 1fr); }
     }
   `],
@@ -234,11 +234,38 @@ export class LibraryComponent {
   protected readonly library = inject(LibraryService);
   readonly activeTab = signal<'bookmarks' | 'history' | 'favorites'>('bookmarks');
 
+  private readonly tabs: ('bookmarks' | 'history' | 'favorites')[] = ['bookmarks', 'history', 'favorites'];
+
   readonly sortedHistory = computed(() =>
     [...this.library.history()].sort((a, b) => b.lastPlayedAt - a.lastPlayedAt)
   );
 
   formatDate(timestamp: number): string {
     return new Date(timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+
+  onTabKeydown(event: KeyboardEvent): void {
+    const currentIdx = this.tabs.indexOf(this.activeTab());
+    let newIdx = currentIdx;
+
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      newIdx = (currentIdx + 1) % this.tabs.length;
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      newIdx = (currentIdx - 1 + this.tabs.length) % this.tabs.length;
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      newIdx = 0;
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      newIdx = this.tabs.length - 1;
+    } else {
+      return;
+    }
+
+    this.activeTab.set(this.tabs[newIdx]);
+    const tabEl = document.getElementById(`tab-${this.tabs[newIdx]}`);
+    tabEl?.focus();
   }
 }

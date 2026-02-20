@@ -115,7 +115,7 @@ import type { Chapter } from '../../core/models/audiobook.model';
       background-color: var(--accent-dim);
     }
     .cl__num {
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       min-width: 24px;
       text-align: center;
@@ -132,11 +132,11 @@ import type { Chapter } from '../../core/models/audiobook.model';
     }
     .cl__reader {
       display: block;
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
     }
     .cl__dur {
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       flex-shrink: 0;
     }

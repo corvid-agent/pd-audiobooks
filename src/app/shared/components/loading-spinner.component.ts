@@ -48,7 +48,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
     }
     .spinner-text {
       color: var(--text-tertiary);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
     }
     .sr-only {
       position: absolute;

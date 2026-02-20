@@ -104,7 +104,7 @@ import { PlayerService } from '../../core/services/player.service';
       color: var(--accent-primary);
     }
     .bottom-nav-label {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.02em;
       line-height: 1;

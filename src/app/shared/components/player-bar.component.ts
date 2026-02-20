@@ -126,8 +126,7 @@ import { PlayerService } from '../../core/services/player.service';
       cursor: pointer;
       color: inherit;
       text-align: left;
-      min-height: auto;
-      min-width: 0;
+      min-height: 44px;
     }
     .player-bar-info:hover .player-bar-title {
       color: var(--accent-primary);
@@ -157,7 +156,7 @@ import { PlayerService } from '../../core/services/player.service';
       min-width: 0;
     }
     .player-bar-title {
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
@@ -166,7 +165,7 @@ import { PlayerService } from '../../core/services/player.service';
       transition: color 0.2s;
     }
     .player-bar-author {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       color: var(--text-tertiary);
       white-space: nowrap;
       overflow: hidden;
@@ -200,8 +199,8 @@ import { PlayerService } from '../../core/services/player.service';
       background: none;
       border: none;
       color: var(--text-tertiary);
-      min-height: 36px;
-      min-width: 36px;
+      min-height: 44px;
+      min-width: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
