@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/preview.png" alt="pd-audiobooks preview" width="100%"></p>
+
 # PD Audiobooks
 
 Stream free public domain audiobooks from LibriVox. Search, browse, and listen to thousands of classic books with chapter-level playback.
