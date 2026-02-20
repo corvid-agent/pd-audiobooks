@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, input, output } from '@angular/core';
 import { PlayerService } from '../../core/services/player.service';
+import { OfflineService } from '../../core/services/offline.service';
 import { DurationPipe } from '../pipes/duration.pipe';
 import type { Chapter } from '../../core/models/audiobook.model';
 
@@ -30,6 +31,11 @@ import type { Chapter } from '../../core/models/audiobook.model';
                   <span class="cl__reader">{{ ch.readers[0] }}</span>
                 }
               </div>
+              @if (offline.isChapterDownloaded(ch.id)) {
+                <span class="cl__offline" title="Available offline">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </span>
+              }
               <span class="cl__dur">{{ ch.durationSecs | duration:'short' }}</span>
               @if (i === currentIndex()) {
                 <span class="cl__playing" aria-label="Currently playing">
@@ -134,6 +140,12 @@ import type { Chapter } from '../../core/models/audiobook.model';
       color: var(--text-tertiary);
       flex-shrink: 0;
     }
+    .cl__offline {
+      color: var(--color-success, #38a169);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
     .cl__playing {
       color: var(--accent-primary);
       flex-shrink: 0;
@@ -144,6 +156,7 @@ import type { Chapter } from '../../core/models/audiobook.model';
 })
 export class ChapterListComponent {
   private readonly player = inject(PlayerService);
+  protected readonly offline = inject(OfflineService);
 
   readonly chapters = input.required<Chapter[]>();
   readonly currentIndex = input<number>(0);

@@ -2,6 +2,7 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import type { PlaybackState, PlaybackSpeed, SleepTimerState } from '../models/player.model';
 import type { AudiobookDetail, Chapter } from '../models/audiobook.model';
 import { LibraryService } from './library.service';
+import { OfflineService } from './offline.service';
 
 const POSITION_KEY = 'pd-audiobooks-player-position';
 const SPEED_KEY = 'pd-audiobooks-player-speed';
@@ -15,7 +16,9 @@ interface SavedPosition {
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
   private readonly library = inject(LibraryService);
+  private readonly offline = inject(OfflineService);
   private audio: HTMLAudioElement | null = null;
+  private currentBlobUrl: string | null = null;
   private currentBook: AudiobookDetail | null = null;
   private positionUpdateTimer: ReturnType<typeof setInterval> | null = null;
   private sleepTimerId: ReturnType<typeof setInterval> | null = null;
@@ -48,8 +51,11 @@ export class PlayerService {
       this.setupAudioListeners();
     }
 
-    this.audio.src = chapter.listenUrl;
-    this.audio.playbackRate = this.loadSpeed();
+    // Revoke previous blob URL to prevent memory leaks
+    if (this.currentBlobUrl) {
+      URL.revokeObjectURL(this.currentBlobUrl);
+      this.currentBlobUrl = null;
+    }
 
     const authorName = book.authors.map((a) => `${a.firstName} ${a.lastName}`.trim()).join(', ') || 'Unknown Author';
 
@@ -70,15 +76,27 @@ export class PlayerService {
       volume: this.audio.volume,
     });
 
-    if (seekTo !== undefined && seekTo > 0) {
-      this.audio.currentTime = seekTo;
-    }
+    // Resolve the URL through the offline cache, then begin playback
+    this.offline.resolveAudioUrl(chapter.listenUrl).then((resolvedUrl) => {
+      if (!this.audio) return;
 
-    this.audio.play().then(() => {
-      this.state.update((s) => s ? { ...s, playing: true } : s);
-      this.startPositionTracking();
-      this.updateMediaSession();
-    }).catch((err) => console.error('Playback error:', err));
+      if (resolvedUrl !== chapter.listenUrl) {
+        this.currentBlobUrl = resolvedUrl;
+      }
+
+      this.audio.src = resolvedUrl;
+      this.audio.playbackRate = this.loadSpeed();
+
+      if (seekTo !== undefined && seekTo > 0) {
+        this.audio.currentTime = seekTo;
+      }
+
+      this.audio.play().then(() => {
+        this.state.update((s) => s ? { ...s, playing: true } : s);
+        this.startPositionTracking();
+        this.updateMediaSession();
+      }).catch((err) => console.error('Playback error:', err));
+    });
   }
 
   resume(book: AudiobookDetail): void {
@@ -197,6 +215,10 @@ export class PlayerService {
     if (this.audio) {
       this.audio.pause();
       this.audio.src = '';
+    }
+    if (this.currentBlobUrl) {
+      URL.revokeObjectURL(this.currentBlobUrl);
+      this.currentBlobUrl = null;
     }
     this.stopPositionTracking();
     this.cancelSleepTimer();

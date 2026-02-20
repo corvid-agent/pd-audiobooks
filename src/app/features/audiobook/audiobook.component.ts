@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CatalogService } from '../../core/services/catalog.service';
 import { LibraryService } from '../../core/services/library.service';
 import { PlayerService } from '../../core/services/player.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { RecentlyPlayedService } from '../../core/services/recently-played.service';
+import { OfflineService } from '../../core/services/offline.service';
 import { LoadingSpinnerComponent } from '../../shared/components/loading-spinner.component';
 import { DurationPipe } from '../../shared/pipes/duration.pipe';
 import type { AudiobookDetail } from '../../core/models/audiobook.model';
@@ -85,6 +86,22 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 </a>
               }
+              @if (allChaptersDownloaded()) {
+                <button class="btn-secondary btn-offline btn-offline--done" (click)="removeAllOffline()">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  Offline Ready
+                </button>
+              } @else {
+                <button class="btn-secondary btn-offline" (click)="downloadAllOffline()" [disabled]="offlineService.activeDownload() !== null">
+                  @if (offlineService.activeDownload(); as dl) {
+                    <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                    {{ dl.percent }}%
+                  } @else {
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download for Offline
+                  }
+                </button>
+              }
             </div>
           </div>
         </div>
@@ -101,17 +118,39 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
             <h2>Chapters ({{ b.sections.length }})</h2>
             <div class="chapter-list" role="list">
               @for (chapter of b.sections; track chapter.id; let i = $index) {
-                <button class="chapter-item" role="listitem" (click)="playChapter(i)" [class.chapter-item--playing]="isChapterPlaying(chapter.id)">
-                  <span class="chapter-item__number">{{ chapter.sectionNumber }}</span>
-                  <div class="chapter-item__info">
-                    <span class="chapter-item__title">{{ chapter.title }}</span>
-                    @if (chapter.readers.length > 0) {
-                      <span class="chapter-item__reader">Read by {{ chapter.readers[0] }}</span>
+                <div class="chapter-row" role="listitem">
+                  <button class="chapter-item" (click)="playChapter(i)" [class.chapter-item--playing]="isChapterPlaying(chapter.id)">
+                    <span class="chapter-item__number">{{ chapter.sectionNumber }}</span>
+                    <div class="chapter-item__info">
+                      <span class="chapter-item__title">{{ chapter.title }}</span>
+                      @if (chapter.readers.length > 0) {
+                        <span class="chapter-item__reader">Read by {{ chapter.readers[0] }}</span>
+                      }
+                    </div>
+                    @if (offlineService.isChapterDownloaded(chapter.id)) {
+                      <span class="chapter-item__offline" title="Available offline">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                      </span>
                     }
-                  </div>
-                  <span class="chapter-item__duration">{{ chapter.durationSecs | duration:'short' }}</span>
-                  <svg class="chapter-item__play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-                </button>
+                    <span class="chapter-item__duration">{{ chapter.durationSecs | duration:'short' }}</span>
+                    <svg class="chapter-item__play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+                  </button>
+                  <button
+                    class="chapter-dl-btn"
+                    [attr.aria-label]="offlineService.isChapterDownloaded(chapter.id) ? 'Remove offline copy of ' + chapter.title : 'Download ' + chapter.title + ' for offline'"
+                    (click)="toggleChapterOffline(chapter.id, chapter.listenUrl, b.id, $event)"
+                    [disabled]="isChapterDownloading(chapter.id)"
+                  >
+                    @if (isChapterDownloading(chapter.id)) {
+                      <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                      <span class="chapter-dl-pct">{{ offlineService.activeDownload()?.percent ?? 0 }}%</span>
+                    } @else if (offlineService.isChapterDownloaded(chapter.id)) {
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-success, #38a169)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    } @else {
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    }
+                  </button>
+                </div>
               }
             </div>
           </section>
@@ -295,6 +334,12 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
       color: var(--text-tertiary);
       flex-shrink: 0;
     }
+    .chapter-item__offline {
+      color: var(--color-success, #38a169);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
     .chapter-item__play {
       color: var(--accent-primary);
       flex-shrink: 0;
@@ -303,6 +348,45 @@ import type { AudiobookDetail } from '../../core/models/audiobook.model';
     }
     .chapter-item:hover .chapter-item__play,
     .chapter-item--playing .chapter-item__play { opacity: 1; }
+    .chapter-row {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .chapter-dl-btn {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      width: 44px;
+      min-height: 44px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      color: var(--text-tertiary);
+      transition: all 0.2s;
+      padding: 0;
+    }
+    .chapter-dl-btn:hover:not(:disabled) {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+    .chapter-dl-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .chapter-dl-pct {
+      font-size: 0.6rem;
+      font-weight: 700;
+    }
+    .btn-offline {
+      position: relative;
+    }
+    .btn-offline--done {
+      color: var(--color-success, #38a169);
+      border-color: var(--color-success, #38a169);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { animation: spin 1s linear infinite; }
     .detail__links {
       display: flex;
       gap: var(--space-lg);
@@ -336,12 +420,21 @@ export class AudiobookComponent implements OnInit {
   private readonly player = inject(PlayerService);
   private readonly notifications = inject(NotificationService);
   private readonly recentlyPlayed = inject(RecentlyPlayedService);
+  protected readonly offlineService = inject(OfflineService);
 
   readonly book = signal<AudiobookDetail | null>(null);
   readonly loading = signal(true);
   readonly coverFailed = signal(false);
 
   readonly hasProgress = signal(false);
+
+  readonly allChaptersDownloaded = computed(() => {
+    const b = this.book();
+    if (!b || b.sections.length === 0) return false;
+    // Touch the signal so we recompute when downloads change
+    const ids = this.offlineService.downloadedChapterIds();
+    return b.sections.every((ch) => ids.has(ch.id));
+  });
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -407,5 +500,40 @@ export class AudiobookComponent implements OnInit {
   isChapterPlaying(chapterId: string): boolean {
     const s = this.player.state();
     return !!s && s.chapterId === chapterId && s.playing;
+  }
+
+  isChapterDownloading(chapterId: string): boolean {
+    const dl = this.offlineService.activeDownload();
+    return !!dl && dl.chapterId === chapterId;
+  }
+
+  async toggleChapterOffline(chapterId: string, url: string, bookId: string, event: Event): Promise<void> {
+    event.stopPropagation();
+    if (this.offlineService.isChapterDownloaded(chapterId)) {
+      await this.offlineService.removeChapter(chapterId);
+      this.notifications.show('Removed offline copy', 'info');
+    } else {
+      const ok = await this.offlineService.downloadChapter(bookId, chapterId, url);
+      if (ok) {
+        this.notifications.show('Chapter downloaded for offline', 'success');
+      } else if (!this.offlineService.activeDownload()) {
+        this.notifications.show('Download failed. Try again.', 'error');
+      }
+    }
+  }
+
+  async downloadAllOffline(): Promise<void> {
+    const b = this.book();
+    if (!b) return;
+    this.notifications.show('Downloading all chapters...', 'info', 2000);
+    const count = await this.offlineService.downloadAllChapters(b.id, b.sections);
+    this.notifications.show(`${count} of ${b.sections.length} chapters available offline`, 'success');
+  }
+
+  async removeAllOffline(): Promise<void> {
+    const b = this.book();
+    if (!b) return;
+    await this.offlineService.removeAllForBook(b.id);
+    this.notifications.show('Removed all offline copies', 'info');
   }
 }
